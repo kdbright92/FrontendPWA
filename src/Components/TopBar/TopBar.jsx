@@ -1,230 +1,3 @@
-/* import './topBar.scss'
-import HomeIcon from '@mui/icons-material/Home';
-import { Link } from "react-router-dom";
-import SearchIcon from '@mui/icons-material/Search';
-import ForumIcon from '@mui/icons-material/Forum';
-import GroupIcon from '@mui/icons-material/Group';
-import LogoutIcon from '@mui/icons-material/Logout';
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import ListItemText from '@mui/material/ListItemText';
-import Drawer from '@mui/material/Drawer';
-import Avatar from '@mui/material/Avatar';
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import { useContext } from 'react';
-import { useNavigate } from "react-router-dom";
-import UserApi from "../../Store/User/UserApi";
-import {
-    AccountBox,
-    Article,
-    Group,
-    Home,
-    ModeNight,
-    Person,
-    Settings,
-    Storefront,
-} from "@mui/icons-material";
-import {
-    Box,
-
-    ListItemButton,
-    ListItemIcon,
-
-    Switch,
-} from "@mui/material";
-import MessageIcon from '@mui/icons-material/Message';
-import { useLocation } from 'react-router-dom';
-
-
-
-export default function TopBar({ }) {
-    const [showMenu, setShowMenu] = useState(false);
-    const [showForumDrawer, setShowForumDrawer] = useState(false);
-    const [showUserSettings, setShowUserSettings] = useState(false);
-    const navigate = useNavigate();
-    const { clearUser, user } = useContext(UserApi);
-    const { friendrequestlenght } = user;
-    const location = useLocation();
-    const { updateUser, user: { firstname, profilePicture, userId } } = useContext(UserApi);
-
-
-
-
-    const showSuccessNotification = () => {
-        toast.success('Logout successful!', {
-            position: toast.POSITION.TOP_CENTER
-        });
-    };
-    const handleLogout = () => {
-        // Clear local storage
-        localStorage.removeItem('accessToken'); // Clear any token or user data in local storage
-
-        // Update the UserProvider context (set the user to null or default value)
-        clearUser(); // Assuming setUser is a function from your UserProvider
-
-        // Redirect to the login page after logout
-        showSuccessNotification();
-        navigate('/register');
-    };
-
-
-
-    const toggleMenu = () => {
-        setShowMenu(!showMenu);
-    };
-
-
-
-    const toggleForumDrawer = () => {
-        setShowForumDrawer(!showForumDrawer);
-    };
-
-
-    return (
-        <div className='topBar'>
-            <div className='left'>
-                <Link to="/">
-                    <div className="home">
-                        <span>Master</span>
-                    </div>
-
-
-                </Link>
-
-                <div className="hamburger" onClick={toggleMenu}>
-                    <MenuRoundedIcon />
-                </div>
-                <p>Hey {firstname}</p>
-
-
-
-
-                <div className="search">
-                    <SearchIcon />
-                    <input type='text' placeholder='Search...' />
-                </div>
-
-                <Drawer anchor="left" open={showMenu} onClose={toggleMenu}>
-                    <div role="presentation" onClick={toggleMenu} onKeyDown={toggleMenu}>
-                        <List>
-                            <ListItem disablePadding>
-                                <ListItemButton component="a" href="http://localhost:3000/">
-                                    <ListItemIcon>
-                                        <Home />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Homepage" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton component="a" href="/profile">
-                                    <ListItemIcon>
-                                        <AccountBox />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Profile" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton component="a" href="#simple-list">
-                                    <ListItemIcon>
-                                        <Article />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Pages" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton component="a" href="#simple-list">
-                                    <ListItemIcon>
-                                        <Group />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Groups" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton component="a" href="#simple-list">
-                                    <ListItemIcon>
-                                        <Storefront />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Marketplace" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton component="a" >
-                                    <ListItemIcon>
-                                        <Link to={`/friends/${userId}`}>
-                                            <Person />
-                                        </Link>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Friends" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton component="a" href="#simple-list">
-                                    <ListItemIcon>
-
-
-                                    </ListItemIcon>
-
-                                    <ListItemText primary="Settings" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton component="a" href="/profile">
-                                    <ListItemIcon>
-                                        <AccountBox />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Profile" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton component="a" href="#simple-list">
-                                    <ListItemIcon>
-
-                                    </ListItemIcon>
-
-                                </ListItemButton>
-                            </ListItem>
-                        </List>
-                    </div>
-                </Drawer>
-
-
-            </div>
-            <div className='right'>
-
-                <Link to={`/profile/${userId}`}>
-                    <Avatar sx={{ width: 100, height: 100 }} alt="Profile Picture" src={`data:image/png;base64, ${profilePicture}`} />
-
-                </Link>
-
-                <div className='friends'>
-                    <Link to={`/friends/${userId}`}>
-                        <GroupIcon sx={{ width: 35, height: 35 }} />
-
-                    </Link>
-                    <div className='counter' >
-                        {friendrequestlenght}
-                    </div>
-                </div>
-
-
-                <div className="logout" onClick={handleLogout}>
-                    <Link to="/register">
-                        <LogoutIcon />
-                    </Link>
-                </div>
-
-
-            </div>
-        </div>
-    )
-}
-
-
- */
-
 
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
@@ -238,49 +11,20 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { Link } from "react-router-dom";
-import ForumIcon from '@mui/icons-material/Forum';
 import GroupIcon from '@mui/icons-material/Group';
-import LogoutIcon from '@mui/icons-material/Logout';
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import List from '@mui/material/List';
+
 import HomeIcon from '@mui/icons-material/Home';
-import ListItem from '@mui/material/ListItem';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import ListItemText from '@mui/material/ListItemText';
-import Drawer from '@mui/material/Drawer';
+
 import Avatar from '@mui/material/Avatar';
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import { useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import UserApi from "../../Store/User/UserApi";
-import {
-    AccountBox,
-    Article,
-    Group,
-    Home,
-    ModeNight,
-    Person,
-    Settings,
-    Storefront,
-} from "@mui/icons-material";
-import {
 
-
-    ListItemButton,
-    ListItemIcon,
-
-    Switch,
-} from "@mui/material";
-import MessageIcon from '@mui/icons-material/Message';
-import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const Search = styled('div')(({ theme }) => ({
@@ -326,18 +70,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-    const [showMenu, setShowMenu] = useState(false);
-    const [showForumDrawer, setShowForumDrawer] = useState(false);
-    const [showUserSettings, setShowUserSettings] = useState(false);
+
     const navigate = useNavigate();
     const { clearUser, user } = useContext(UserApi);
     const { friendrequestlenght, token } = user;
-    const location = useLocation();
-    const { updateUser, user: { firstname, profilePicture, userId } } = useContext(UserApi);
+    const { user: { firstname, profilePicture, userId } } = useContext(UserApi);
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-    const [searchKeyword, setSearchKeyword] = useState('');
-    const [users, setUsers] = useState('');
+    const [setUsers] = useState('');
 
     const showSuccessNotification = () => {
         toast.success('Logout successful!', {

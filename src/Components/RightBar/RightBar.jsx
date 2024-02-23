@@ -5,7 +5,7 @@ import UserApi from '../../Store/User/UserApi';
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
-import Container from '@mui/material/Container'; // Added Container
+import Container from '@mui/material/Container';
 
 import Button from '@mui/material/Button';
 
@@ -14,7 +14,6 @@ export default function RightBar() {
     const { user, updateUser } = useContext(UserApi);
     const { token, userId } = user;
     const [friendrequest, setFriendRequest] = useState([]);
-    const [allFriendRequests, setallFriendRequests] = useState([]);
     const [friendList, setFriendList] = useState([]);
     const [updatePendingRequests, setUpdatePendingRequests] = useState(false);
     const [isFriendListCollapsed, setIsFriendListCollapsed] = useState(true);
@@ -72,7 +71,6 @@ export default function RightBar() {
             }
         };
 
-        // Fetch user profile when the component mounts
         fetchPendingRequests();
         updateUser({ friendrequestlenght });
     }, [updatePendingRequests]);

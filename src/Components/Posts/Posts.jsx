@@ -20,7 +20,7 @@ export default function Posts({ isUserProfile, userPost, showUserPosts, userId }
 
     const config = {
         headers: {
-            Authorization: `Bearer ${token}` // Set your token format here (e.g., Bearer)
+            Authorization: `Bearer ${token}`
 
         }
 

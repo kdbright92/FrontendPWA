@@ -1,12 +1,7 @@
 import './share.scss'
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import TagIcon from '@mui/icons-material/Tag';
 import AddIcon from '@mui/icons-material/Add';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import { useState } from 'react';
 import DoneIcon from '@mui/icons-material/Done';
-import Geocode from "react-geocode";
 import { Fab, Tooltip } from '@mui/material';
 import axios from 'axios';
 import {
@@ -21,7 +16,6 @@ import {
 } from "@mui/material";
 import {
 
-    DateRange,
     EmojiEmotions,
     Image,
     PersonAdd,
@@ -37,7 +31,6 @@ import { toast } from 'react-toastify';
 export default function Share({ onShare }) {
     const [title, setTitle] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
-    const [selectedLocation, setSelectedLocation] = useState('');
     const [open, setOpen] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [showDoneIcon, setShowDoneIcon] = useState(false);
@@ -46,7 +39,7 @@ export default function Share({ onShare }) {
 
     const { firstname, lastname, token } = user;
     const { updatePost } = useContext(PostApi);
-    const { updateUser, user: { profilePicture } } = useContext(UserApi);
+    const { user: { profilePicture } } = useContext(UserApi);
 
 
     const showSuccessNotification = () => {
@@ -137,7 +130,6 @@ export default function Share({ onShare }) {
 
         setTitle('')
         setSelectedFile(null);
-        setSelectedLocation('');
         setTimeout(() => {
             setOpen(false);
         }, 1000);

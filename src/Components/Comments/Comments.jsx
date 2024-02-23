@@ -10,7 +10,7 @@ import Avatar from '@mui/material/Avatar';
 
 export default function Comments({ comments, setComments, onDeleteComment, counthandler, postId }) {
     const [commentInput, setCommentInput] = useState('');
-    const [commentCount, setCommentCount] = useState(0); // New state for comment count
+    const [commentCount, setCommentCount] = useState(0);
     const [editingCommentId, setEditingCommentId] = useState(null);
     const { user } = useContext(UserApi);
     const [commentsTemp, setCommentsTemp] = useState([]);
@@ -58,7 +58,7 @@ export default function Comments({ comments, setComments, onDeleteComment, count
     const handleDeleteComment = async (commentId) => {
         const config = {
             headers: {
-                Authorization: `Bearer ${token}` // Set your token format here (e.g., Bearer)
+                Authorization: `Bearer ${token}`
 
             }
         };
@@ -89,11 +89,11 @@ export default function Comments({ comments, setComments, onDeleteComment, count
         setEditingCommentId(null);
     };
     const handleEditComment = (commentId) => {
-        setEditingCommentId(commentId); // Set the currently editing comment ID
+        setEditingCommentId(commentId);
     };
     const handleKeyDown = (e, commentId) => {
         if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent default behavior of textarea on Enter key
+            e.preventDefault();
             const updatedText = e.target.value;
             handleUpdateComment(updatedText, commentId);
         }

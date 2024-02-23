@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "set HTTPS=true&&set SSL_CRT_FILE=./localhost.crt&&set SSL_KEY_FILE=./localhost.key&&react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp public/service-worker.js build/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -45,5 +45,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://localhost:8443"
+  "proxy": "https://localhost:8443",
+  "devDependencies": {
+    "workbox-cli": "^7.0.0"
+  }
 }

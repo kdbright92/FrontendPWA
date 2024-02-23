@@ -72,12 +72,11 @@ export default function Share({ onShare }) {
 
     const handleSuccessfulUpload = () => {
         setUploadSuccess(true);
-        setShowDoneIcon(true); // Set the success state to true
+        setShowDoneIcon(true);
         setTimeout(() => {
             setUploadSuccess(false);
-            setShowDoneIcon(false); // Reset the success state after a delay (e.g., 3 seconds)
+            setShowDoneIcon(false);
         }, 10000);
-        // Change the delay as needed
     };
 
 
@@ -86,7 +85,6 @@ export default function Share({ onShare }) {
         const file = e.target.files[0];
 
         if (file) {
-            // Check if the file type is allowed (e.g., image)
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onloadend = () => {
@@ -95,7 +93,6 @@ export default function Share({ onShare }) {
                 };
                 reader.readAsDataURL(file);
             } else {
-                // Handle the case where the file type is not allowed
                 console.error('Invalid file type. Please select an image.');
             }
         }
@@ -116,7 +113,7 @@ export default function Share({ onShare }) {
 
         const config = {
             headers: {
-                Authorization: `Bearer ${token}` // Set your token format here (e.g., Bearer)
+                Authorization: `Bearer ${token}`
 
             }
 
@@ -134,7 +131,6 @@ export default function Share({ onShare }) {
             onShare(createPost);
 
         } catch (error) {
-            // Handle any errors that occurred during the POST request
             console.error("Error creating post:", error);
 
         }

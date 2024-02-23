@@ -5,9 +5,7 @@ import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import UserApi from '../../Store/User/UserApi';
 import { useContext } from "react";
 import axios from 'axios';
-import { Podcasts } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
-import PostApi from '../../Store/Post/PostApi';
 
 
 export default function Comments({ comments, setComments, onDeleteComment, counthandler, postId }) {
@@ -15,11 +13,10 @@ export default function Comments({ comments, setComments, onDeleteComment, count
     const [commentCount, setCommentCount] = useState(0); // New state for comment count
     const [editingCommentId, setEditingCommentId] = useState(null);
     const { user } = useContext(UserApi);
-    const { postInfo } = useContext(PostApi);
     const [commentsTemp, setCommentsTemp] = useState([]);
 
 
-    const { firstname, token, profilePicture } = user;
+    const { token, profilePicture } = user;
 
     const handleSend = () => {
 
@@ -28,14 +25,13 @@ export default function Comments({ comments, setComments, onDeleteComment, count
         if (commentInput.trim() !== '') {
             const newComment = {
                 text: commentInput,
-                // Add other properties like user and post if needed
             };
 
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
 
-                    Authorization: `Bearer ${token}` // Set your token format here (e.g., Bearer)
+                    Authorization: `Bearer ${token}`
 
                 }
             }
@@ -52,7 +48,6 @@ export default function Comments({ comments, setComments, onDeleteComment, count
                 })
                 .catch((error) => {
                     console.error("Error creating comment:", error);
-                    // Add logic to handle or display the error
                 });
 
 
@@ -91,7 +86,7 @@ export default function Comments({ comments, setComments, onDeleteComment, count
             return comment;
         });
         setComments(updatedComments);
-        setEditingCommentId(null); // Reset editing comment ID after update
+        setEditingCommentId(null);
     };
     const handleEditComment = (commentId) => {
         setEditingCommentId(commentId); // Set the currently editing comment ID

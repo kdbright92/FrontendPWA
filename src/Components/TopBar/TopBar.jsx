@@ -369,12 +369,9 @@ export default function PrimarySearchAppBar() {
         handleMobileMenuClose();
     };
     const logout = () => {
-        localStorage.removeItem('accessToken'); // Clear any token or user data in local storage
+        localStorage.removeItem('accessToken');
 
-        // Update the UserProvider context (set the user to null or default value)
-        clearUser(); // Assuming setUser is a function from your UserProvider
-
-        // Redirect to the login page after logout
+        clearUser();
         showSuccessNotification();
         navigate('/register');
 

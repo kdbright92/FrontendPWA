@@ -7,98 +7,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UserApi from "../../Store/User/UserApi";
 import React, { useContext, useEffect } from 'react';
-
-
-// export default function Register(onFormSwitch) {
-//     const [username, setUserName] = useState('');
-//     const [password, setPassword] = useState('');
-//     const [firstname, setFirstname] = useState('');
-//     const [lastname, setLastname] = useState('');
-//     const navigate = useNavigate();
-//     const { updateUserRegistration } = useContext(UserApi);
-
-//     const showSuccessNotification = () => {
-//         toast.success('Registration successful!', {
-//             position: toast.POSITION.TOP_CENTER
-//         });
-//     };
-
-//     const handleRegister = async (e) => {
-//         e.preventDefault();
-
-//         const url = "http://localhost:8080/api/user/register";
-
-//         const registerUser = {
-//             username,
-//             password,
-//             firstname,
-//             lastname
-//         };
-
-//         try {
-//             const response = await axios.post(url, {
-//                 username,
-//                 password,
-//                 firstname,
-//                 lastname
-//             })
-
-//             if (response.status === 201) {
-//                 // Registration successful, navigate to the login page
-//                 showSuccessNotification();
-//                 updateUserRegistration({ firstname, lastname });
-//                 navigate("/login");
-
-//             } else {
-//                 // Handle unsuccessful registration
-//                 console.error("Registration failed:", response.data);
-//                 // You may want to show an error message to the user here
-//             }
-//         } catch (error) {
-//             // Handle any network errors or exceptions
-//             console.error("Error during registration:", error);
-//             // Show an error message to the user or handle the error accordingly
-//         }
-//     };
-
-
-
-//     return (
-//         <div className="register">
-//             <div className="card">
-//                 <div className="left">
-//                     <h1>Master Arbeit.</h1>
-//                     <p>
-//                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
-//                         alias totam numquam ipsa exercitationem dignissimos, error nam,
-//                         consequatur.
-//                     </p>
-//                     <span>Do  you have an account?</span>
-//                     <Link to="/login">
-//                         <button>Login</button>
-//                     </Link>
-
-//                 </div>
-//                 <div className="right">
-//                     <h1>Register</h1>
-//                     <form onSubmit={handleRegister}>
-//                         <input type="text" placeholder="Username" value={username} onChange={e => setUserName(e.target.value)} />
-//                         <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
-//                         <input type="text" placeholder="Firstname" value={firstname} onChange={e => setFirstname(e.target.value)} />
-//                         <input type="text" placeholder="Lastname" value={lastname} onChange={e => setLastname(e.target.value)} />
-//                         <button  >Register</button>
-
-//                     </form>
-//                 </div>
-//             </div>
-//         </div >
-
-
-
-//     )
-
-// }
-
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -112,9 +20,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-/* import axiosInstance from './api';
- */
-
 
 const defaultTheme = createTheme();
 
@@ -140,12 +45,11 @@ export default function SignUp() {
     };
     const handleSuccessfulUpload = () => {
         setUploadSuccess(true);
-        setShowDoneIcon(true); // Set the success state to true
+        setShowDoneIcon(true);
         setTimeout(() => {
             setUploadSuccess(false);
-            setShowDoneIcon(false); // Reset the success state after a delay (e.g., 3 seconds)
+            setShowDoneIcon(false);
         }, 3000);
-        // Change the delay as needed
     };
 
     const handleFileChange = (e) => {
@@ -188,13 +92,12 @@ export default function SignUp() {
 
 
             if (response.status === 201) {
-                // Registration successful, navigate to the login page
                 const userId = response.data;
 
                 showSuccessNotification();
                 if (selectedFile) {
                     updateUserRegistration({ firstname, lastname, country, userId, city });
-                    updateProfilePicture(selectedFile); // Update profile picture in the context
+                    updateProfilePicture(selectedFile);
                     navigate("/login");
                 } else {
                     updateUserRegistration({ firstname, lastname, country, city });
@@ -204,14 +107,10 @@ export default function SignUp() {
 
 
             } else {
-                // Handle unsuccessful registration
                 console.error("Registration failed:", response.data);
-                // You may want to show an error message to the user here
             }
         } catch (error) {
-            // Handle any network errors or exceptions
             console.error("Error during registration:", error);
-            // Show an error message to the user or handle the error accordingly
         }
 
 

@@ -1,6 +1,5 @@
 
 import './userFriendList.scss'
-
 import axios from 'axios';
 import React from 'react'
 import UserApi from '../../Store/User/UserApi';
@@ -8,7 +7,6 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import Container from '@mui/material/Container'; // Added Container
-
 import Button from '@mui/material/Button';
 
 
@@ -36,7 +34,6 @@ export default function UserFriendList({ userId, currentuser }) {
     };
 
     useEffect(() => {
-        // Fetch the friend list when the component mounts and whenever updatePendingRequests changes
         const fetchFriendList = async () => {
             try {
                 const id = userId

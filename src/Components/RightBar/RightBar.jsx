@@ -43,7 +43,7 @@ export default function RightBar() {
     };
     const config = {
         headers: {
-            Authorization: `Bearer ${token}` // Set your token format here (e.g., Bearer)
+            Authorization: `Bearer ${token}`
 
         }
     }
@@ -81,7 +81,6 @@ export default function RightBar() {
 
 
     useEffect(() => {
-        // Fetch the friend list when the component mounts and whenever updatePendingRequests changes
         const fetchFriendList = async () => {
             try {
                 const response = await axios.get('https://localhost:8443/api/friendship/friends', config);
@@ -93,7 +92,6 @@ export default function RightBar() {
             }
         };
 
-        // Fetch the friend list whenever updatePendingRequests changes
         fetchFriendList();
     }, [updatePendingRequests]);
 
@@ -104,7 +102,6 @@ export default function RightBar() {
             setUpdatePendingRequests(false);
             setFriendRequest((prevRequests) => prevRequests.filter((request) => request.id !== id));
 
-            // Set the state to trigger a re-render of UserFriendList
 
         } catch (error) {
             console.error('Error accepting friend request:', error);

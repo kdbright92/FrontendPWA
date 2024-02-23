@@ -34,7 +34,7 @@ export default function ProfileSetting() {
     const [newUsername, setNewUsername] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const navigate = useNavigate();
-    const [selectedFile, setSelectedFile] = useState(''); // New state for profile picture
+    const [selectedFile, setSelectedFile] = useState('');
 
     const fileInputRef = useRef(null);
 
@@ -52,7 +52,6 @@ export default function ProfileSetting() {
         const file = e.target.files[0];
 
         if (file) {
-            // Check if the file type is allowed (e.g., image)
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onloadend = () => {
@@ -61,7 +60,6 @@ export default function ProfileSetting() {
                 reader.readAsDataURL(file);
 
             } else {
-                // Handle the case where the file type is not allowed
                 console.error('Invalid file type. Please select an image.');
             }
         }
@@ -84,12 +82,11 @@ export default function ProfileSetting() {
         try {
             const response = await axios.put(`https://localhost:8443/api/profile/${userId}`, data, config);
 
-            localStorage.removeItem('accessToken'); // Clear any token or user data in local storage
+            localStorage.removeItem('accessToken');
 
-            // Update the UserProvider context (set the user to null or default value)
-            clearUser(); // Assuming setUser is a function from your UserProvider
 
-            // Redirect to the login page after logout
+            clearUser();
+
             showSuccessNotification();
             navigate('/register');
         } catch (error) {

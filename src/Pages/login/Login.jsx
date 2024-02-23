@@ -8,88 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Share from "../../Components/Share/Share";
 import UserApi from "../../Store/User/UserApi";
 import { useContext } from 'react';
-
-
-// export default function Login() {
-//     const [username, setUserName] = useState('');
-//     const [password, setPassword] = useState('');
-//     const navigate = useNavigate();
-//     const { updateUser } = useContext(UserApi);
-
-
-//     const showSuccessNotification = () => {
-//         toast.success('Login successful!', {
-//             position: toast.POSITION.TOP_CENTER
-//         });
-//     };
-
-//     const handleLogin = async (e) => {
-//         e.preventDefault();
-
-
-//         const url = "http://localhost:8080/api/user/login";
-
-//         try {
-//             const response = await axios.post(url, { username, password });
-//             const token = response.data.token;
-
-//             if (token) {
-//                 showSuccessNotification();
-//                 updateUser({ token, username });
-//                 navigate("/");
-
-//             } else {
-//                 toast.error('Login failed. Invalid credentials.', {
-//                     position: toast.POSITION.TOP_CENTER
-//                 });
-//                 console.log('Bearer token not found');
-//             }
-//         } catch (error) {
-//             toast.error('Login failed. Invalid credentials.', {
-//                 position: toast.POSITION.TOP_CENTER
-//             });
-//             console.error("Error:", error);
-//         }
-//     }
-
-
-
-
-//     return (
-//         <div className="login">
-//             <div className="card">
-//                 <div className="left">
-//                     <h1>Master Arbeit.</h1>
-//                     <p>
-//                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
-//                         alias totam numquam ipsa exercitationem dignissimos, error nam,
-//                         consequatur.
-//                     </p>
-//                     <span>Don't you have an account?</span>
-//                     <Link to="/register">
-//                         <button>Register</button>
-//                     </Link>
-//                 </div>
-//                 <div className="right">
-//                     <h1>Login</h1>
-//                     <form onSubmit={handleLogin}>
-//                         <input type="text" placeholder="Username" value={username} onChange={e => setUserName(e.target.value)} />
-//                         <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
-
-//                         <button  >Login</button>
-
-//                     </form>
-//                 </div>
-//             </div>
-//         </div >
-
-
-
-//     )
-
-// }
-
-
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -106,9 +24,6 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLocation } from 'react-router-dom';
 
-
-
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
@@ -145,7 +60,7 @@ export default function Login() {
                 showSuccessNotification();
                 updateUser({ firstname, lastname, token, username, profilePicture, userId });
 
-                navigate("/");
+                navigate("/home");
 
             } else {
                 toast.error('Login failed. Invalid credentials.', {

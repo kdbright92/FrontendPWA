@@ -27,9 +27,7 @@ export default function PostOptions({ post, onDelete, postId, /* userPost, isUse
 
 
     const handleDelete = () => {
-        // Perform delete action for the post with ID: id
         onDelete(id);
-        // Decrease the comment count when a post gets deleted
         setCommentCount(commentCount - comments.length);
     };
 
@@ -38,8 +36,6 @@ export default function PostOptions({ post, onDelete, postId, /* userPost, isUse
     };
 
     const handleDeleteComment = (commentId) => {
-        // Function to delete a comment
-        // Update the comments list accordingly (remove the comment with commentId)
         const updatedComments = comments.filter(comment => comment.id !== commentId);
         setComments(updatedComments);
         setCommentCount(commentCount - 1);
@@ -114,11 +110,10 @@ export default function PostOptions({ post, onDelete, postId, /* userPost, isUse
                             <Comments
                                 onDeleteComment={handleDeleteComment}
                                 counthandler={handleCommentCount}
-                                comments={post.comments} // Pass comments and related functions as props
+                                comments={post.comments}
                                 setComments={setComments}
                                 postId={postId}
 
-                            // Pass the function to send new comments
                             />
                         )}
                     </div>
@@ -128,8 +123,7 @@ export default function PostOptions({ post, onDelete, postId, /* userPost, isUse
                                 <button onClick={() => setShowOptions(false)}>Close</button>
                                 <button>Bearbeiten</button>
                                 <button onClick={handleDelete}>Delete</button>
-                                {/* Add functionality for "Change Post" */}
-                                {/* <button onClick={handleChangePost}>Change Post</button> */}
+
                             </div>
                         </div>
                     )}

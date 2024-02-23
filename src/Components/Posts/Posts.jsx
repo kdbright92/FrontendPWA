@@ -6,7 +6,6 @@ import axios from 'axios';
 import UserApi from '../../Store/User/UserApi';
 import React, { useContext } from "react";
 import PostApi from '../../Store/Post/PostApi';
-import { useParams, useLocation } from 'react-router-dom';
 
 export default function Posts({ isUserProfile, userPost, showUserPosts, userId }) {
     const [posts, setPosts] = useState([]);
@@ -77,17 +76,13 @@ export default function Posts({ isUserProfile, userPost, showUserPosts, userId }
     const handleDelete = async (postIdToDelete) => {
         try {
 
-            // Make a DELETE request to delete the post by ID
             await axios.delete(`https://localhost:8443/api/post/${postIdToDelete}`, config);
 
-            // Update the state to reflect the deleted post
             const updatedPosts = posts.filter((post) => post.id !== postIdToDelete);
             setPosts(updatedPosts);
 
-            // Perform any other necessary actions after successful deletion
         } catch (error) {
             console.error('Error deleting post:', error);
-            // Handle errors or display error messages if needed
         }
     };
 

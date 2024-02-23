@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useContext } from 'react';
-import { useNavigate } from "react-router-dom"; import UserApi from "../../Store/User/UserApi";
+import UserApi from "../../Store/User/UserApi";
 
 export default function LeftBar() {
 

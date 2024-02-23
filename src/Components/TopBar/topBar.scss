@@ -1,0 +1,144 @@
+@import "../../styles.scss";
+
+.topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    border-bottom: 1px solid lightgray;
+    position: sticky;
+    top: 0;
+    background-color: whitesmoke;
+    z-index: 999;
+
+    @include mobile {}
+
+    .left {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+
+        span,
+        p {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .home {
+            display: block;
+
+            @media (max-width: 480px) {
+                display: none;
+            }
+        }
+    }
+
+    .hamburger {
+        display: none;
+
+        @media (max-width: 480px) {
+            display: block;
+            cursor: pointer;
+        }
+    }
+
+    .search {
+        flex: 1; // Allow the search section to take available space
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid lightgrey;
+        border-radius: 5px;
+        padding: 5px;
+
+        @include mobile {
+            display: none;
+        }
+
+        @include tablet {
+            display: none;
+        }
+
+        input {
+            border: none;
+            flex: 1; // Allow the input to take available space
+            background-color: transparent;
+
+            @include mobile {
+                display: none;
+            }
+
+            @include tablet {
+                width: 200px;
+            }
+        }
+    }
+
+    .right {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+
+            @include mobile {
+                margin-left: 10px;
+            }
+        }
+
+        .friends {
+
+            margin-right: 20px;
+            position: relative;
+            display: inline-block;
+            margin-top: 10px;
+
+            @include mobile {
+                display: inline-block;
+                margin-right: 50px;
+                margin-top: 5px;
+                position: relative;
+
+            }
+
+            .counter {
+                position: absolute;
+                top: -25%;
+                left: 92%;
+                transform: translateX(-50%);
+                margin-right: 30px;
+                color: red;
+                font-size: 20px;
+                font-weight: bold;
+
+                @include mobile {
+                    position: absolute;
+                    top: -25%;
+                    left: 92%;
+                    padding: 5px;
+                    transform: translateX(-50%);
+                    margin-right: 30px;
+                    color: red;
+                    font-size: 20px;
+                    flex-wrap: bold;
+
+                }
+
+            }
+        }
+
+        .logout {
+            @include mobile {
+
+                margin-right: 30px;
+
+            }
+
+
+        }
+    }
+}

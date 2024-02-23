@@ -1,0 +1,249 @@
+import './share.scss'
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import TagIcon from '@mui/icons-material/Tag';
+import AddIcon from '@mui/icons-material/Add';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import { useState } from 'react';
+import DoneIcon from '@mui/icons-material/Done';
+import Geocode from "react-geocode";
+import { Fab, Tooltip } from '@mui/material';
+import axios from 'axios';
+import {
+    Avatar,
+    Button,
+    ButtonGroup,
+    Modal,
+    Stack,
+    styled,
+    TextField,
+    Typography,
+} from "@mui/material";
+import {
+
+    DateRange,
+    EmojiEmotions,
+    Image,
+    PersonAdd,
+    VideoCameraBack,
+} from "@mui/icons-material";
+import { Box } from "@mui/system";
+import PostApi from '../../Store/Post/PostApi';
+import React, { useContext } from "react";
+import UserApi from "../../Store/User/UserApi";
+import { toast } from 'react-toastify';
+
+
+export default function Share({ onShare }) {
+    const [title, setTitle] = useState('');
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState('');
+    const [open, setOpen] = useState(false);
+    const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [showDoneIcon, setShowDoneIcon] = useState(false);
+
+    const { user } = useContext(UserApi);
+
+    const { firstname, lastname, token } = user;
+    const { updatePost } = useContext(PostApi);
+    const { updateUser, user: { profilePicture } } = useContext(UserApi);
+
+
+    const showSuccessNotification = () => {
+        toast.success('Succesfull Post', {
+            position: toast.POSITION.TOP_CENTER
+        });
+    };
+
+
+
+    const SytledModal = styled(Modal)({
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    });
+
+    const UserBox = styled(Box)({
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        marginBottom: "20px",
+    });
+
+    const handleSuccessfulUpload = () => {
+        setUploadSuccess(true);
+        setShowDoneIcon(true); // Set the success state to true
+        setTimeout(() => {
+            setUploadSuccess(false);
+            setShowDoneIcon(false); // Reset the success state after a delay (e.g., 3 seconds)
+        }, 10000);
+        // Change the delay as needed
+    };
+
+
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+
+        if (file) {
+            // Check if the file type is allowed (e.g., image)
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setSelectedFile(reader.result.split(',')[1]);
+                    handleSuccessfulUpload();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Handle the case where the file type is not allowed
+                console.error('Invalid file type. Please select an image.');
+            }
+        }
+    };
+
+
+
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const url = "https://localhost:8443/api/post/create";
+
+        const createPost = {
+            title,
+            selectedFile
+        };
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}` // Set your token format here (e.g., Bearer)
+
+            }
+
+        };
+
+
+        try {
+            const response = await axios.post(url, createPost, config);
+
+            const postId = response.data.id;
+            const userId = response.data.user.id;
+
+            updatePost({ postId, userId });
+
+            onShare(createPost);
+
+        } catch (error) {
+            // Handle any errors that occurred during the POST request
+            console.error("Error creating post:", error);
+
+        }
+
+        setTitle('')
+        setSelectedFile(null);
+        setSelectedLocation('');
+        setTimeout(() => {
+            setOpen(false);
+        }, 1000);
+        showSuccessNotification();
+    }
+
+    return (
+        <div >
+
+            <Tooltip
+
+                title="Create Post"
+                sx={{
+                    position: "fixed",
+                    bottom: 20,
+                    left: { xs: "calc(50% - 25px)", md: 30 },
+                }}
+            >
+                <Fab color="primary" aria-label="add" onClick={(e) => setOpen(true)}>
+                    <AddIcon />
+                </Fab>
+            </Tooltip>
+            <SytledModal
+                open={open}
+                onClose={(e) => setOpen(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+
+            >
+                <Box
+                    width={400}
+                    height={280}
+                    bgcolor={"white"}
+                    color={"text.primary"}
+                    p={3}
+                    borderRadius={5}
+                >
+                    <Typography variant="h6" color="gray" textAlign="center">
+                        Create post
+                    </Typography>
+                    <UserBox>
+                        <Avatar sx={{ width: 100, height: 100 }} alt="Profile Picture" src={`data:image/png;base64, ${profilePicture}`} />
+
+                        <Typography fontWeight={500} variant="span">
+                            {firstname} {lastname}
+                        </Typography>
+                    </UserBox>
+
+                    <TextField
+
+                        type='text'
+                        sx={{ width: "100%" }}
+                        id="standard-multiline-static"
+                        multiline
+                        required
+                        fullWidth
+                        rows={3}
+                        placeholder="What's on your mind?"
+                        variant="standard"
+                        value={title}
+                        autoFocus
+                        onChange={e => setTitle(e.target.value)}
+
+
+
+
+                    />
+
+                    <Stack direction="row" gap={1} mt={2} mb={3}>
+                        <EmojiEmotions color="primary" />
+                        <label htmlFor="fileInput">
+                            {showDoneIcon ? (
+                                <DoneIcon />
+                            ) : (
+                                <Image color="secondary" />)}
+                        </label>
+                        <input
+                            type="file"
+                            id="fileInput"
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
+
+
+                        <VideoCameraBack color="success" />
+                        <PersonAdd color="error" onClick={() => setOpen(true)} />
+
+                    </Stack>
+                    <ButtonGroup
+                        fullWidth
+                        variant="contained"
+                        aria-label="outlined primary button group"
+                    >
+                        <Button onClick={handleSubmit}
+
+                        >Post</Button>
+
+                    </ButtonGroup>
+                </Box>
+            </SytledModal>
+
+
+        </div >
+    )
+}

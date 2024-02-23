@@ -1,0 +1,152 @@
+/* @import "../../styles.scss";
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-left: 30px;
+
+    .images {
+        width: 100%;
+        height: 38vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .cover {
+            width: 100vh;
+            height: 25vh;
+            position: relative;
+            object-fit: cover;
+            border-radius: 2%;
+
+            @include mobile {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vh;
+                height: 30vh;
+                object-fit: cover;
+                border-radius: 2%;
+            }
+        }
+
+        .profilePic {
+            width: 7vw;
+            height: 7vw;
+            border-radius: 50%;
+            object-fit: cover;
+            z-index: 5;
+
+            @include mobile {
+                width: 20vw;
+                height: 20vw;
+                position: fixed;
+                left: 50%;
+                top: 30%;
+                transform: translateX(-50%) translateY(-50%);
+                z-index: 3;
+            }
+
+            @include tablet {
+                width: 20vw;
+                height: 20vw;
+            }
+        }
+    }
+
+    .profileContainer {
+        z-index: 2;
+        height: 15vh;
+        width: 100vh;
+        box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.5);
+        border-radius: 2vh;
+        margin-left: 10px;
+
+        @include tablet {
+            flex-direction: column;
+            height: auto;
+            width: 100%;
+            padding: 2vh 2vw;
+            position: relative;
+            right: 0;
+            margin-top: 5vh;
+        }
+
+        @include mobile {
+            padding: 1vh 2vw;
+            background-color: ghostwhite;
+            position: fixed;
+            margin-left: 5px;
+            width: 90%;
+            top: 37%;
+            left: 48%;
+            transform: translateX(-50%) translateY(-50%);
+            z-index: 2;
+        }
+
+        .center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1vh;
+
+            @include mobile {
+                gap: 4vw;
+            }
+
+            span {
+                font-size: 2vh;
+                font-weight: 300;
+            }
+
+            .info {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                gap: 1vw;
+
+                @include mobile {
+                    gap: 10vw;
+                }
+
+                .item {
+                    display: flex;
+                    align-items: center;
+                    gap: 1vw;
+                }
+            }
+
+            button {
+                border: none;
+                background-color: #5271ff;
+                color: white;
+                padding: 1vh 2vw;
+                border-radius: 5px;
+                cursor: pointer;
+
+                @include mobile {
+                    width: 100%;
+                    margin-top: 1vh;
+                }
+            }
+        }
+    }
+
+    .posts {
+        width: 100%;
+        top: 70%;
+    }
+
+    @include mobile {
+        width: 100%;
+        position: fixed;
+        top: 40%;
+        right: 0.5%;
+        bottom: 0;
+        overflow-y: scroll;
+        padding-top: 20%;
+    }
+} */

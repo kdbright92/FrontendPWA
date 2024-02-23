@@ -1,0 +1,108 @@
+.register {
+    height: 100vh;
+    background-color: aqua;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .card {
+        width: 80%;
+        /* Adjust width for smaller screens */
+        max-width: 800px;
+        /* Limit maximum width */
+        margin: 20px;
+        border-radius: 10px;
+        flex-direction: row-reverse;
+        display: flex;
+        background-color: whitesmoke;
+        min-height: 600px;
+
+        .left {
+            flex: 1;
+            background: url("https://images.pexels.com/photos/708392/pexels-photo-708392.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+            padding: 5%;
+            display: flex;
+            flex-direction: column;
+            gap: 3vw;
+            color: black;
+            background-size: cover;
+            overflow: hidden;
+
+            h1 {
+                font-size: 5vw;
+                /* Adjust font size based on viewport width */
+                line-height: 6vw;
+                /* Adjust line height based on viewport width */
+                margin: 0;
+            }
+
+            p {
+                font-weight: bold;
+                font-size: 2vw;
+                /* Adjust font size based on viewport width */
+            }
+
+            span {
+                font-size: 1.2vw;
+                /* Adjust font size based on viewport width */
+                font-weight: bold;
+            }
+
+            button {
+                padding: 1vw 3vw;
+                /* Adjust padding based on viewport width */
+                border: none;
+                background-color: white;
+                font-weight: bold;
+                cursor: pointer;
+                font-size: 1.5vw;
+                /* Adjust font size based on viewport width */
+            }
+        }
+
+        .right {
+            flex: 1;
+            padding: 5%;
+            display: flex;
+            flex-direction: column;
+            gap: 3vw;
+            justify-content: center;
+
+            h1 {
+                color: #555;
+                font-size: 3vw;
+                /* Adjust font size based on viewport width */
+                margin: 0;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: 3vw;
+
+                input {
+                    border: none;
+                    border-bottom: 0.2vw solid lightblue;
+                    /* Adjust border thickness based on viewport width */
+                    padding: 2vw 1vw;
+                    /* Adjust padding based on viewport width */
+                    font-size: 1.5vw;
+                    /* Adjust font size based on viewport width */
+                }
+
+                button {
+                    width: 100%;
+                    padding: 2vw;
+                    /* Adjust padding based on viewport width */
+                    border: none;
+                    background-color: lightblue;
+                    color: white;
+                    font-weight: bold;
+                    cursor: pointer;
+                    font-size: 1.8vw;
+                    /* Adjust font size based on viewport width */
+                }
+            }
+        }
+    }
+}

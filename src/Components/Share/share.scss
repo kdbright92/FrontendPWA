@@ -1,0 +1,125 @@
+@import "../../styles.scss";
+
+.teilen {
+    -webkit-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+    -moz-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+    box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    background-color: themed("bg");
+    display: flex;
+
+    .container {
+        padding: 10px;
+
+        .teilenTop {
+            display: flex;
+            align-items: center;
+
+            .teilenProfileImg {
+                width: 50px;
+                /* Korrektur: 50px statt 50x */
+                height: 50px;
+                border-radius: 50%;
+                /* Rundes Profilbild */
+                object-fit: cover;
+                margin-right: 10px;
+            }
+
+            .teilenInput {
+                border: none;
+                width: 80%;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+
+        .teilenHr {
+            margin: 20px;
+        }
+
+        .teilenBottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .teilenOptions {
+                display: flex;
+                margin-right: 20px;
+
+                .teilenOption {
+                    display: flex;
+                    align-items: center;
+                    margin: 15px;
+                    cursor: pointer;
+
+                    .teilenIcon {
+                        font-size: 18px;
+                        margin-right: 3px;
+                    }
+
+                    .teilenOptionText {
+                        font-size: 14px;
+                        font-weight: 500;
+                    }
+                }
+            }
+
+            .shareButton {
+                border: none;
+                padding: 7px;
+                border-radius: 5px;
+                color: white;
+                background-color: lightblue;
+                cursor: pointer;
+                font-weight: 500;
+            }
+        }
+    }
+
+    @include mobile {
+        flex-direction: column;
+        /* Spaltenlayout auf mobilen Geräten */
+        padding: 10px;
+        /* Anpassung des äußeren Abstands für mobile Geräte */
+
+        .container {
+            padding: 5px;
+            /* Anpassung des inneren Abstands für mobile Geräte */
+
+            .teilenTop {
+                .teilenProfileImg {
+                    width: 40px;
+                    /* Anpassung der Größe des Profilbilds für mobile Geräte */
+                    height: 40px;
+                }
+
+                .teilenInput {
+                    width: 100%;
+                    /* Vollständige Breite für den Eingabebereich auf mobilen Geräten */
+                }
+            }
+
+            .teilenHr {
+                margin: 10px;
+                /* Anpassung des Abstands für mobile Geräte */
+            }
+
+            .teilenBottom {
+                .teilenOptions {
+
+                    .teilenOption {
+                        display: flex;
+                        margin: 1px;
+                        /* Anpassung des Abstands für mobile Geräte */
+                    }
+                }
+
+
+            }
+        }
+    }
+}

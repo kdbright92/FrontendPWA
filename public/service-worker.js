@@ -7,68 +7,74 @@ const urlsToCache = [
     '/manifest.json',
 
 
+
+
+
+
     // Add other URLs you want to cache
 ];
 
 self.addEventListener('install', (event) => {
+    console.log('[Service Worker installing...', event);
 
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
-                return cache.addAll(urlsToCache);
+                const urlsToCachePromises = urlsToCache.map((url) => {
+                    return cache.add(url)
+                        .catch((error) => {
+                            console.error(`Failed to cache ${url}:`, error);
+                            // Return a promise to keep the overall Promise.all chain working
+                            return Promise.resolve();
+                        });
+                });
 
+                // Wait for all caching promises to complete
+                return Promise.all(urlsToCachePromises);
             })
-
+            .catch((error) => {
+                console.error('Error opening cache:', error);
+            })
     );
+});
+
+self.addEventListener('activate', (event) => {
+    console.log('[Service Worker activated...', event)
+    return self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
             .then((response) => {
-                // Cache hit - return the response from the cache
                 if (response) {
-                    // Update cache in the background
-                    fetchAndUpdateCache(event.request);
+                    console.log('[Service Worker] In Cache available:', event.request.url);
                     return response;
+                } else {
+                    console.log('[Service Worker] Not in Cache. Fetching from network:', event.request.url);
+
+                    return fetch(event.request)
+                        .then((networkResponse) => {
+                            // Check if the response is valid and cacheable
+                            if (networkResponse && networkResponse.status === 200) {
+                                const responseToCache = networkResponse.clone();
+
+                                // Open the cache and add the response
+                                caches.open(CACHE_NAME)
+                                    .then((cache) => {
+                                        cache.put(event.request, responseToCache);
+                                        console.log('[Succesfully put in Cache]')
+                                    });
+                            }
+
+                            return networkResponse;
+                        })
+                        .catch((error) => {
+                            console.error('Fetch failed:', error);
+                        });
                 }
-
-                // Not in cache - fetch the resource from the network
-                return fetch(event.request)
-                    .then((response) => {
-                        // Clone the response to store it in the cache
-                        const clonedResponse = response.clone();
-
-                        caches.open(CACHE_NAME)
-                            .then((cache) => {
-                                // Cache the fetched resource
-                                cache.put(event.request, clonedResponse);
-                            });
-
-                        return response;
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching and caching:', error);
-                    });
             })
     );
 });
 
 
-async function fetchAndUpdateCache(request) {
-    try {
-        const response = await fetch(request);
-        if (response.status === 200) {
-            // Clone the response to store it in the cache
-            const clonedResponse = response.clone();
-
-            caches.open(CACHE_NAME)
-                .then((cache) => {
-                    // Update the cache with the new response
-                    cache.put(request, clonedResponse);
-                });
-        }
-    } catch (error) {
-        console.error('Error updating cache:', error);
-    }
-}

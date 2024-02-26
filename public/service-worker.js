@@ -1,17 +1,12 @@
 // public/service-worker.js
 
-const CACHE_NAME = 'my-cache';
+const CACHE_NAME = 'static-v1';
+const Cache_Name = 'dynamic'
 const urlsToCache = [
     '/',
     '/index.html',
     '/manifest.json',
 
-
-
-
-
-
-    // Add other URLs you want to cache
 ];
 
 self.addEventListener('install', (event) => {
@@ -40,10 +35,14 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
     console.log('[Service Worker activated...', event)
+
     return self.clients.claim();
 });
 
+//Cache then Network Strategy
+//Dynamic Cache with Network Fallback-> If its in the cache load it, if not, go to network and afterwards put it in the cache
 self.addEventListener('fetch', (event) => {
+
     event.respondWith(
         caches.match(event.request)
             .then((response) => {
@@ -60,7 +59,7 @@ self.addEventListener('fetch', (event) => {
                                 const responseToCache = networkResponse.clone();
 
                                 // Open the cache and add the response
-                                caches.open(CACHE_NAME)
+                                caches.open(Cache_Name)
                                     .then((cache) => {
                                         cache.put(event.request, responseToCache);
                                         console.log('[Succesfully put in Cache]')
@@ -76,5 +75,10 @@ self.addEventListener('fetch', (event) => {
             })
     );
 });
+
+
+
+
+
 
 

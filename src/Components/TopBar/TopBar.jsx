@@ -196,10 +196,11 @@ export default function PrimarySearchAppBar() {
                     size="large"
                     aria-label="show 17 new notifications"
                     color="inherit"
+                    onClick={openFriendRequest}
                 >
                     <Badge badgeContent={friendrequestlenght} color="error">
 
-                        <GroupIcon onClick={openFriendRequest} />
+                        <GroupIcon />
                     </Badge>
                 </IconButton>
                 <p>Friends</p>
@@ -211,19 +212,21 @@ export default function PrimarySearchAppBar() {
                     aria-controls="primary-search-account-menu"
                     aria-haspopup="true"
                     color="inherit"
+                    onClick={accountSettings}
                 >
-                    <ManageAccountsIcon onClick={accountSettings} />
+                    <ManageAccountsIcon />
                 </IconButton>
                 <p>Account Settings</p>
             </MenuItem>
 
-            <MenuItem onClick={handleProfileMenuOpen}>
+            <MenuItem >
                 <IconButton
                     size="large"
                     aria-label="account of current user"
                     aria-controls="primary-search-account-menu"
                     aria-haspopup="true"
                     color="inherit"
+                    onClick={handleProfileMenuOpen}
                 >
                     <Avatar sx={{ width: 40, height: 40 }} alt="Profile Picture" src={`data:image/png;base64, ${profilePicture}`} />
 
@@ -243,8 +246,9 @@ export default function PrimarySearchAppBar() {
                         color="inherit"
                         aria-label="open drawer"
                         sx={{ mr: 2 }}
+                        onClick={goToHome}
                     >
-                        <HomeIcon onClick={goToHome} />
+                        <HomeIcon />
                     </IconButton>
                     <Typography
                         variant="h6"

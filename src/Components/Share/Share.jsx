@@ -94,7 +94,6 @@ export default function Share({ onShare }) {
 
 
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const url = "https://localhost:8443/api/post/create";
@@ -107,11 +106,8 @@ export default function Share({ onShare }) {
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
-
             }
-
         };
-
 
         try {
             const response = await axios.post(url, createPost, config);
@@ -126,15 +122,27 @@ export default function Share({ onShare }) {
         } catch (error) {
             console.error("Error creating post:", error);
 
+            // Save the post to localStorage for offline submission
+            saveOfflinePost(createPost);
         }
 
-        setTitle('')
+        setTitle('');
         setSelectedFile(null);
         setTimeout(() => {
             setOpen(false);
         }, 1000);
         showSuccessNotification();
-    }
+    };
+
+    // Function to save offline posts to localStorage
+    const saveOfflinePost = (post) => {
+        console.log("Hello")
+        const offlinePosts = JSON.parse(localStorage.getItem('offlinePosts')) || [];
+        offlinePosts.push(post);
+        localStorage.setItem('offlinePosts', JSON.stringify(offlinePosts));
+
+    };
+
 
     return (
         <div >

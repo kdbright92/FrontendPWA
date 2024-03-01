@@ -1,12 +1,7 @@
 import './share.scss'
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import TagIcon from '@mui/icons-material/Tag';
 import AddIcon from '@mui/icons-material/Add';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import { useState } from 'react';
 import DoneIcon from '@mui/icons-material/Done';
-import Geocode from "react-geocode";
 import { Fab, Tooltip } from '@mui/material';
 import axios from 'axios';
 import {
@@ -21,7 +16,6 @@ import {
 } from "@mui/material";
 import {
 
-    DateRange,
     EmojiEmotions,
     Image,
     PersonAdd,
@@ -34,10 +28,11 @@ import UserApi from "../../Store/User/UserApi";
 import { toast } from 'react-toastify';
 
 
+
+
 export default function Share({ onShare }) {
     const [title, setTitle] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
-    const [selectedLocation, setSelectedLocation] = useState('');
     const [open, setOpen] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [showDoneIcon, setShowDoneIcon] = useState(false);
@@ -46,7 +41,7 @@ export default function Share({ onShare }) {
 
     const { firstname, lastname, token } = user;
     const { updatePost } = useContext(PostApi);
-    const { updateUser, user: { profilePicture } } = useContext(UserApi);
+    const { user: { profilePicture } } = useContext(UserApi);
 
 
     const showSuccessNotification = () => {
@@ -101,7 +96,6 @@ export default function Share({ onShare }) {
 
 
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const url = "https://localhost:8443/api/post/create";
@@ -114,11 +108,8 @@ export default function Share({ onShare }) {
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
-
             }
-
         };
-
 
         try {
             const response = await axios.post(url, createPost, config);
@@ -133,16 +124,42 @@ export default function Share({ onShare }) {
         } catch (error) {
             console.error("Error creating post:", error);
 
+            // Save the post to localStorage for offline submission
+            /* saveOfflinePost(createPost); */
         }
 
-        setTitle('')
+        setTitle('');
         setSelectedFile(null);
-        setSelectedLocation('');
         setTimeout(() => {
             setOpen(false);
         }, 1000);
         showSuccessNotification();
-    }
+    };
+
+    // Function to save offline posts to localStorage
+    /*  const saveOfflinePost = async (post) => {
+         console.log("Successfully saved to IndexedDB");
+ 
+         try {
+             const db = await openDB();
+             const transaction = db.transaction(STORE_NAME, 'readwrite');
+             const store = transaction.objectStore(STORE_NAME);
+ 
+             // Add the post data to the IndexedDB store
+             const request = store.add(post);
+ 
+             request.onerror = (event) => {
+                 console.error('Error saving post to IndexedDB:', event.target.error);
+             };
+ 
+             request.onsuccess = (event) => {
+                 console.log('Post saved to IndexedDB:', event.target.result);
+             };
+         } catch (error) {
+             console.error('Error opening IndexedDB:', error);
+         }
+     }; */
+
 
     return (
         <div >

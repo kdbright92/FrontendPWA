@@ -6,14 +6,11 @@ import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UserApi from "../../Store/User/UserApi";
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -56,7 +53,6 @@ export default function SignUp() {
         const file = e.target.files[0];
 
         if (file) {
-            // Check if the file type is allowed (e.g., image)
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onloadend = () => {
@@ -66,7 +62,6 @@ export default function SignUp() {
                 reader.readAsDataURL(file);
 
             } else {
-                // Handle the case where the file type is not allowed
                 console.error('Invalid file type. Please select an image.');
             }
         }

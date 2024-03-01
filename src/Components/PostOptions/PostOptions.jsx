@@ -8,16 +8,16 @@ import SendIcon from '@mui/icons-material/Send';
 import Comments from '../Comments/Comments';
 import { useState, useEffect } from 'react';
 import UserApi from "../../Store/User/UserApi";
-import Container from '@mui/material/Container'; // Added Container
+import Container from '@mui/material/Container';
 
 import { useContext } from "react";
 
-export default function PostOptions({ post, onDelete, postId, /* userPost, isUserProfile  */ }) {
+export default function PostOptions({ post, onDelete, postId, }) {
     const [showOptions, setShowOptions] = useState(false);
 
     const [likedPost, setLikedPost] = useState(false);
     const [commentOpen, setCommentOpen] = useState(false);
-    const [comments, setComments] = useState([]); // Move comments state here
+    const [comments, setComments] = useState([]);
     const [commentCount, setCommentCount] = useState(0);
     const [likedCount, setLikedCount] = useState(0);
     const { user } = useContext(UserApi);
@@ -75,7 +75,6 @@ export default function PostOptions({ post, onDelete, postId, /* userPost, isUse
 
                         </div>
                         <div className="moreOptions">
-                            {/* Toggle the modal on clicking MoreHorizIcon */}
                             <MoreHorizIcon onClick={() => setShowOptions(!showOptions)} />
                         </div>
 

@@ -11,7 +11,6 @@ export default function Posts({ isUserProfile, userPost, showUserPosts, userId }
     const [posts, setPosts] = useState([]);
 
     const { user } = useContext(UserApi);
-
     const { token } = user;
     const { postInfo } = useContext(PostApi);
     const { postId } = postInfo;
@@ -20,7 +19,7 @@ export default function Posts({ isUserProfile, userPost, showUserPosts, userId }
 
     const config = {
         headers: {
-            Authorization: `Bearer ${token}` // Set your token format here (e.g., Bearer)
+            Authorization: `Bearer ${token}`
 
         }
 
@@ -29,6 +28,7 @@ export default function Posts({ isUserProfile, userPost, showUserPosts, userId }
     const fetchPosts = async () => {
         try {
             let apiUrl = "https://localhost:8443/api/post/getAll";
+
 
             if (showUserPosts) {
                 apiUrl = `https://localhost:8443/api/post/getUserPosts/${userId}`;

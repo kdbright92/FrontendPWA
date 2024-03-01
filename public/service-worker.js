@@ -3,49 +3,16 @@
 
 const CACHE_VERSION = 'static-v2';
 const Cache_Name = 'dynamic';
-const SYNC_TAG = 'sync-data';
-const DB_NAME = 'offlineDataDB';
-const STORE_NAME = 'offlineDataStore';
+
 
 const urlsToCache = [
     '/',
     '/index.html',
     '/manifest.json',
 ];
-async function openDB() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 1);
-
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-            db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-        };
-
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
-}
-
-const getAuthToken = () => {
-    const userData = localStorage.getItem('user');
-
-    // Check if userData is not null or undefined
-    if (userData) {
-        const userObj = JSON.parse(userData);
-
-        // Check if the userObj has a token property
-        if (userObj && userObj.token) {
-            console.log(userObj.token)
-
-            return userObj.token;
 
 
-        }
-        else { console.log("fuck") }
-    }
 
-
-};
 self.addEventListener('install', (event) => {
     console.log('[Service Worker installing...', event);
 
@@ -89,6 +56,7 @@ self.addEventListener('activate', (event) => {
     return self.clients.claim();
 });
 
+/* //Network first then Cache
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         fetch(event.request)
@@ -137,70 +105,50 @@ self.addEventListener('fetch', (event) => {
                 return caches.match(event.request);
             })
     );
-});
+}); */
 
 
 
-self.addEventListener('sync', (event) => {
-    console.log('Sync event triggered');
+//Cache first then Network
 
-    const syncData = async () => {
-        try {
-            const offlineData = await getOfflineData();
-            const token = getAuthToken();
-            console.log(token);
-
-            for (const data of offlineData) {
-                try {
-                    const response = await fetch('https://localhost:8443/api/post/create', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${token}`,
-                        },
-                        body: JSON.stringify(data),
-                    });
-
-                    if (response.ok) {
-                        await removeOfflineData(data.id);
-                    }
-                } catch (error) {
-                    console.error('Sync failed:', error);
-                }
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request).then((cacheResponse) => {
+            // If the response is in the cache, return it
+            if (cacheResponse) {
+                return cacheResponse;
             }
-        } catch (error) {
-            console.error('Error retrieving offline data:', error);
-        }
-    };
 
-    syncData();
+            // If the response is not in the cache, fetch from the network
+            return fetch(event.request)
+                .then((networkResponse) => {
+                    // Check if the network response is valid (status 200) before caching
+                    if (event.request.method === 'GET' && networkResponse && networkResponse.status === 200) {
+                        const responseToCache = networkResponse.clone();
+                        // Open the cache and put the response
+                        caches.open(Cache_Name)
+                            .then((cache) => {
+                                cache.put(event.request, responseToCache);
+                                console.log('[Successfully put in Cache]');
+                            });
+                    }
+
+                    return networkResponse;
+                })
+                .catch((error) => {
+                    // If the fetch fails, log an error and return a fallback response
+                    console.error('Fetch failed:', error);
+                    return new Response('Offline fallback response');
+                });
+        })
+    );
 });
 
 
-// Example functions for IndexedDB storage
-async function addOfflineData(data) {
-    const db = await openDB();
-    const transaction = db.transaction(STORE_NAME, 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    store.add(data);
-}
 
-// Get all data from the IndexedDB store
-async function getOfflineData() {
-    const db = await openDB();
-    const transaction = db.transaction(STORE_NAME, 'readonly');
-    const store = transaction.objectStore(STORE_NAME);
-    const data = await store.getAll();
-    return data;
-}
 
-// Remove data from the IndexedDB store
-async function removeOfflineData(id) {
-    const db = await openDB();
-    const transaction = db.transaction(STORE_NAME, 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    store.delete(id);
-}
+
+
 
 
 

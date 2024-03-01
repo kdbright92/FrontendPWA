@@ -3,14 +3,28 @@
 
 const CACHE_VERSION = 'static-v2';
 const Cache_Name = 'dynamic';
-
+const SYNC_TAG = 'sync-data';
+const DB_NAME = 'offlineDataDB';
+const STORE_NAME = 'offlineDataStore';
 
 const urlsToCache = [
     '/',
     '/index.html',
     '/manifest.json',
 ];
+async function openDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
 
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+        };
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
 
 const getAuthToken = () => {
     const userData = localStorage.getItem('user');
@@ -79,12 +93,24 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         fetch(event.request)
             .then((networkResponse) => {
-                if (networkResponse && networkResponse.status === 200 && event.request.method === 'POST') {
-                    // If it's a POST request, trigger background sync
-                    event.waitUntil(
-                        self.registration.sync.register(SYNC_TAG)
-                    );
-                } else if (networkResponse && networkResponse.status === 200 && event.request.method === 'GET') {
+                if (event.request.method === 'POST' && networkResponse && networkResponse.status !== 200) {
+                    // If it's a POST request and it failed, check online status before triggering background sync
+                    console.log('Failed Post');
+
+                    if (navigator.onLine) {
+                        // If online, trigger background sync
+                        event.waitUntil(
+                            self.registration.sync.register(SYNC_TAG)
+                        );
+                    }
+                    else {
+                        // If offline, manually trigger sync when back online
+                        navigator.serviceWorker.ready.then(function (swRegistration) {
+                            return swRegistration.sync.register(SYNC_TAG);
+                        });
+                    }
+                } else if (event.request.method === 'GET' && networkResponse && networkResponse.status === 200) {
+                    // If it's a GET request with a successful response, cache the response
                     const responseToCache = networkResponse.clone();
 
                     caches.open(Cache_Name)
@@ -97,46 +123,87 @@ self.addEventListener('fetch', (event) => {
                 return networkResponse;
             })
             .catch((error) => {
+                // If the fetch fails, log an error
                 console.error('Fetch failed:', error);
+
+                //riggering background sync for failed POST requests
+
+                event.waitUntil(
+                    self.registration.sync.register(SYNC_TAG)
+                );
+
+
+                // Attempt to return a cached response
                 return caches.match(event.request);
             })
     );
 });
 
 
+
 self.addEventListener('sync', (event) => {
     console.log('Sync event triggered');
 
     const syncData = async () => {
-        const offlineData = JSON.parse(localStorage.getItem('offlinePosts')) || [];
-        const token = getAuthToken();
+        try {
+            const offlineData = await getOfflineData();
+            const token = getAuthToken();
+            console.log(token);
 
-        // Loop through offline data and sync with the server
-        for (const data of offlineData) {
-            try {
-                // Perform the server sync here (similar to your axios.post logic)
-                const response = await fetch('https://localhost:8443/api/post/create', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(data),
-                });
+            for (const data of offlineData) {
+                try {
+                    const response = await fetch('https://localhost:8443/api/post/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(data),
+                    });
 
-                if (response.ok) {
-                    // Remove the synced data from local storage
-                    const updatedOfflineData = offlineData.filter((d) => d !== data);
-                    localStorage.setItem('offlineData', JSON.stringify(updatedOfflineData));
+                    if (response.ok) {
+                        await removeOfflineData(data.id);
+                    }
+                } catch (error) {
+                    console.error('Sync failed:', error);
                 }
-            } catch (error) {
-                console.error('Sync failed:', error);
             }
+        } catch (error) {
+            console.error('Error retrieving offline data:', error);
         }
     };
 
-    event.waitUntil(syncData());
+    syncData();
 });
+
+
+// Example functions for IndexedDB storage
+async function addOfflineData(data) {
+    const db = await openDB();
+    const transaction = db.transaction(STORE_NAME, 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    store.add(data);
+}
+
+// Get all data from the IndexedDB store
+async function getOfflineData() {
+    const db = await openDB();
+    const transaction = db.transaction(STORE_NAME, 'readonly');
+    const store = transaction.objectStore(STORE_NAME);
+    const data = await store.getAll();
+    return data;
+}
+
+// Remove data from the IndexedDB store
+async function removeOfflineData(id) {
+    const db = await openDB();
+    const transaction = db.transaction(STORE_NAME, 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    store.delete(id);
+}
+
+
+
 
 
 

@@ -28,6 +28,8 @@ import UserApi from "../../Store/User/UserApi";
 import { toast } from 'react-toastify';
 
 
+
+
 export default function Share({ onShare }) {
     const [title, setTitle] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
@@ -123,7 +125,7 @@ export default function Share({ onShare }) {
             console.error("Error creating post:", error);
 
             // Save the post to localStorage for offline submission
-            saveOfflinePost(createPost);
+            /* saveOfflinePost(createPost); */
         }
 
         setTitle('');
@@ -135,13 +137,28 @@ export default function Share({ onShare }) {
     };
 
     // Function to save offline posts to localStorage
-    const saveOfflinePost = (post) => {
-        console.log("Hello")
-        const offlinePosts = JSON.parse(localStorage.getItem('offlinePosts')) || [];
-        offlinePosts.push(post);
-        localStorage.setItem('offlinePosts', JSON.stringify(offlinePosts));
-
-    };
+    /*  const saveOfflinePost = async (post) => {
+         console.log("Successfully saved to IndexedDB");
+ 
+         try {
+             const db = await openDB();
+             const transaction = db.transaction(STORE_NAME, 'readwrite');
+             const store = transaction.objectStore(STORE_NAME);
+ 
+             // Add the post data to the IndexedDB store
+             const request = store.add(post);
+ 
+             request.onerror = (event) => {
+                 console.error('Error saving post to IndexedDB:', event.target.error);
+             };
+ 
+             request.onsuccess = (event) => {
+                 console.log('Post saved to IndexedDB:', event.target.result);
+             };
+         } catch (error) {
+             console.error('Error opening IndexedDB:', error);
+         }
+     }; */
 
 
     return (

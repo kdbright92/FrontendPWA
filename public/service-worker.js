@@ -109,9 +109,12 @@ self.addEventListener('fetch', (event) => {
 
 
 
-//Cache first then Network
-
-self.addEventListener('fetch', (event) => {
+//Cache first then Network, then put the response in the cache
+/* self.addEventListener('fetch', (event) => {
+    if (event.request.method === 'POST') {
+        // Let the request go directly to the network without caching
+        return fetch(event.request);
+    }
     event.respondWith(
         caches.match(event.request).then((cacheResponse) => {
             // If the response is in the cache, return it
@@ -126,6 +129,7 @@ self.addEventListener('fetch', (event) => {
                     if (event.request.method === 'GET' && networkResponse && networkResponse.status === 200) {
                         const responseToCache = networkResponse.clone();
                         // Open the cache and put the response
+
                         caches.open(Cache_Name)
                             .then((cache) => {
                                 cache.put(event.request, responseToCache);
@@ -140,9 +144,72 @@ self.addEventListener('fetch', (event) => {
                     console.error('Fetch failed:', error);
                     return new Response('Offline fallback response');
                 });
+
         })
     );
+}); */
+
+self.addEventListener('fetch', (event) => {
+    if (event.request.method === 'GET') {
+        // For GET requests, try to respond from the cache first
+        event.respondWith(
+            caches.match(event.request).then((cacheResponse) => {
+                // If the response is in the cache, return it
+                if (cacheResponse) {
+                    return cacheResponse;
+                }
+
+                // If the response is not in the cache, fetch from the network
+                return fetch(event.request)
+                    .then((networkResponse) => {
+                        // Check if the network response is valid (status 200) before caching
+                        if (event.request.method === 'GET' && networkResponse && networkResponse.status === 200) {
+                            const responseToCache = networkResponse.clone();
+                            // Open the cache and put the response
+                            caches.open(Cache_Name)
+                                .then((cache) => {
+                                    cache.put(event.request, responseToCache);
+                                    console.log('[Successfully put in Cache]');
+                                });
+                        }
+
+                        return networkResponse;
+                    })
+                    .catch((error) => {
+                        // If the fetch fails, log an error and return a fallback response
+                        console.error('Fetch failed:', error);
+                        return new Response('Offline fallback response');
+                    });
+            })
+        );
+    } else if (event.request.method === 'POST') {
+        // For POST requests, fetch from the network and cache the response
+        event.respondWith(
+            fetch(event.request)
+                .then((networkResponse) => {
+                    // Check if the network response is valid (status 200) before caching
+                    if (event.request.method === 'POST' && networkResponse && networkResponse.status === 200) {
+                        const responseToCache = networkResponse.clone();
+                        // Open the cache and put the response
+                        caches.open(Cache_Name)
+                            .then((cache) => {
+                                cache.put(event.request, responseToCache);
+                                console.log('[Successfully put POST response in Cache]');
+                            });
+                    }
+
+                    return networkResponse;
+                })
+                .catch((error) => {
+                    console.error('POST request failed:', error);
+                    // You may want to customize the response for failed POST requests
+                    return new Response('Post request failed.');
+                })
+        );
+    }
 });
+
+
 
 
 

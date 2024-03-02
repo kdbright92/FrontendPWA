@@ -1,8 +1,10 @@
 // public/service-worker.js
 
+/* importScripts('/indexedDB.js') */
 
 const CACHE_VERSION = 'static-v2';
 const Cache_Name = 'dynamic';
+
 
 
 const urlsToCache = [
